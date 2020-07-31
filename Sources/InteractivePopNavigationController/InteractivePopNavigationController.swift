@@ -8,14 +8,12 @@ open class InteractivePopNavigationController: UINavigationController {
         /// Whenever the delegate is being set we check if our subclass itself is the delegate (we don’t do anything so the subclass will be set as its own delegate).
         /// If the delegate is of any other class we do not set it as delegate but keep a reference to it in externalDelegate.
         didSet {
-            if !(delegate is BaseNavigationController) {
+            if !(delegate is InteractivePopNavigationController) {
                 externalDelegate = delegate
                 super.delegate = oldValue
             }
         }
     }
-    
-    public var transitionHelper = TransitionHelper()
     
     // MARK: - Private properties
     
@@ -45,14 +43,10 @@ open class InteractivePopNavigationController: UINavigationController {
     }
 }
 
-// MARK: - TransitionHelperInterface
-
-extension BaseNavigationController: TransitionHelperInterface {}
-
 // MARK: - UIGestureRecognizerDelegate
 
-extension BaseNavigationController: UIGestureRecognizerDelegate {
-    func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+extension InteractivePopNavigationController: UIGestureRecognizerDelegate {
+    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer == interactivePopGestureRecognizer {
             // Disable pop gesture in three situations:
             // 1) when there less than 2 view controllers on stack.
@@ -68,10 +62,10 @@ extension BaseNavigationController: UIGestureRecognizerDelegate {
 // MARK: - UINavigationControllerDelegate
 
 /// We have to foward all delegate methods to external delegate to make it fully functional.
-extension BaseNavigationController: UINavigationControllerDelegate {
+extension InteractivePopNavigationController: UINavigationControllerDelegate {
     
     /// Called when pushed view controller did show - so we can set isPushingViewController back to false.
-    func navigationController(
+    public func navigationController(
         _ navigationController: UINavigationController,
         didShow viewController: UIViewController, animated: Bool) {
         
@@ -80,7 +74,7 @@ extension BaseNavigationController: UINavigationControllerDelegate {
             navigationController, didShow: viewController, animated: animated)
     }
     
-    func navigationController(
+    public func navigationController(
         _ navigationController: UINavigationController,
         willShow viewController: UIViewController, animated: Bool) {
         
@@ -88,19 +82,19 @@ extension BaseNavigationController: UINavigationControllerDelegate {
             navigationController, willShow: viewController, animated: animated)
     }
     
-    func navigationControllerSupportedInterfaceOrientations(
+    public func navigationControllerSupportedInterfaceOrientations(
         _ navigationController: UINavigationController) -> UIInterfaceOrientationMask {
         return externalDelegate?.navigationControllerSupportedInterfaceOrientations?(
             navigationController) ?? visibleViewController?.supportedInterfaceOrientations ?? .all
     }
     
-    func navigationControllerPreferredInterfaceOrientationForPresentation(
+    public func navigationControllerPreferredInterfaceOrientationForPresentation(
         _ navigationController: UINavigationController) -> UIInterfaceOrientation {
         return externalDelegate?.navigationControllerPreferredInterfaceOrientationForPresentation?(
             navigationController) ?? .portrait
     }
     
-    func navigationController(
+    public func navigationController(
         _ navigationController: UINavigationController,
         animationControllerFor operation: UINavigationController.Operation,
         from fromVC: UIViewController, to toVC: UIViewController)
@@ -110,7 +104,7 @@ extension BaseNavigationController: UINavigationControllerDelegate {
             navigationController, animationControllerFor: operation, from: fromVC, to:toVC)
     }
     
-    func navigationController(
+    public func navigationController(
         _ navigationController: UINavigationController,
         interactionControllerFor animationController: UIViewControllerAnimatedTransitioning)
         -> UIViewControllerInteractiveTransitioning? {
