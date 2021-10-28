@@ -1,3 +1,27 @@
+//
+//  InteractivePopNavigationController.swift
+//
+//  Copyright © 2021 Gienadij Mackiewicz
+//
+//  Permission is hereby granted, free of charge, to any person obtaining a copy
+//  of this software and associated documentation files (the "Software"), to deal
+//  in the Software without restriction, including without limitation the rights
+//  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+//  copies of the Software, and to permit persons to whom the Software is
+//  furnished to do so, subject to the following conditions:
+//
+//  The above copyright notice and this permission notice shall be included in
+//  all copies or substantial portions of the Software.
+//
+//  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+//  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+//  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+//  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+//  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+//  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+//  THE SOFTWARE.
+//
+
 import UIKit
 
 open class InteractivePopNavigationController: UINavigationController {
@@ -26,7 +50,7 @@ open class InteractivePopNavigationController: UINavigationController {
     
     // MARK: - Lifecycle
     
-    public override func viewDidLoad() {
+    open override func viewDidLoad() {
         super.viewDidLoad()
         
         delegate = self
@@ -36,7 +60,7 @@ open class InteractivePopNavigationController: UINavigationController {
     // MARK: - Overriden methods
     
     /// Overriden pushViewController method to set isPushingViewController to true.
-    public override func pushViewController(_ viewController: UIViewController, animated: Bool) {
+    open override func pushViewController(_ viewController: UIViewController, animated: Bool) {
         isPushingViewController = true
         
         super.pushViewController(viewController, animated: animated)
@@ -46,7 +70,7 @@ open class InteractivePopNavigationController: UINavigationController {
 // MARK: - UIGestureRecognizerDelegate
 
 extension InteractivePopNavigationController: UIGestureRecognizerDelegate {
-    public func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
+    open func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
         if gestureRecognizer == interactivePopGestureRecognizer {
             // Disable pop gesture in three situations:
             // 1) when there less than 2 view controllers on stack.
@@ -65,7 +89,7 @@ extension InteractivePopNavigationController: UIGestureRecognizerDelegate {
 extension InteractivePopNavigationController: UINavigationControllerDelegate {
     
     /// Called when pushed view controller did show - so we can set isPushingViewController back to false.
-    public func navigationController(
+    open func navigationController(
         _ navigationController: UINavigationController,
         didShow viewController: UIViewController, animated: Bool) {
         
@@ -74,7 +98,7 @@ extension InteractivePopNavigationController: UINavigationControllerDelegate {
             navigationController, didShow: viewController, animated: animated)
     }
     
-    public func navigationController(
+    open func navigationController(
         _ navigationController: UINavigationController,
         willShow viewController: UIViewController, animated: Bool) {
         
@@ -82,19 +106,19 @@ extension InteractivePopNavigationController: UINavigationControllerDelegate {
             navigationController, willShow: viewController, animated: animated)
     }
     
-    public func navigationControllerSupportedInterfaceOrientations(
+    open func navigationControllerSupportedInterfaceOrientations(
         _ navigationController: UINavigationController) -> UIInterfaceOrientationMask {
         return externalDelegate?.navigationControllerSupportedInterfaceOrientations?(
             navigationController) ?? visibleViewController?.supportedInterfaceOrientations ?? .all
     }
     
-    public func navigationControllerPreferredInterfaceOrientationForPresentation(
+    open func navigationControllerPreferredInterfaceOrientationForPresentation(
         _ navigationController: UINavigationController) -> UIInterfaceOrientation {
         return externalDelegate?.navigationControllerPreferredInterfaceOrientationForPresentation?(
             navigationController) ?? .portrait
     }
     
-    public func navigationController(
+    open func navigationController(
         _ navigationController: UINavigationController,
         animationControllerFor operation: UINavigationController.Operation,
         from fromVC: UIViewController, to toVC: UIViewController)
@@ -104,7 +128,7 @@ extension InteractivePopNavigationController: UINavigationControllerDelegate {
             navigationController, animationControllerFor: operation, from: fromVC, to:toVC)
     }
     
-    public func navigationController(
+    open func navigationController(
         _ navigationController: UINavigationController,
         interactionControllerFor animationController: UIViewControllerAnimatedTransitioning)
         -> UIViewControllerInteractiveTransitioning? {
